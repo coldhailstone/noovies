@@ -1,47 +1,29 @@
 import { Ionicons } from '@expo/vector-icons';
-import Entypo from '@expo/vector-icons/Entypo';
-import * as Font from 'expo-font';
+import { useAssets } from 'expo-asset';
+import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback } from 'react';
 import { Text, View } from 'react-native';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
-    const [appIsReady, setAppIsReady] = useState(false);
-
-    useEffect(() => {
-        async function prepare() {
-            try {
-                await Font.loadAsync(Ionicons.font);
-                await new Promise((resolve) => setTimeout(resolve, 3000));
-            } catch (error) {
-                console.warn(error);
-            } finally {
-                setAppIsReady(true);
-            }
-        }
-
-        prepare();
-    }, []);
+    const [assets] = useAssets([]);
+    const [fonts] = useFonts(Ionicons.font);
 
     const onLayoutRootView = useCallback(async () => {
-        if (appIsReady) {
+        if (assets && fonts) {
             await SplashScreen.hideAsync();
         }
-    }, [appIsReady]);
+    }, [assets, fonts]);
 
-    if (!appIsReady) {
+    if (!assets || !fonts) {
         return null;
     }
 
     return (
-        <View
-            style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}
-            onLayout={onLayoutRootView}
-        >
-            <Text>SplashScreen Demo! 👋</Text>
-            <Entypo name='rocket' size={30} />
+        <View onLayout={onLayoutRootView}>
+            <Text>We are done Loading!</Text>
         </View>
     );
 }
