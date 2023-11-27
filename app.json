@@ -1,11 +1,12 @@
 {
-  "expo": {
-    "name": "noovies",
-    "slug": "noovies",
-    "version": "1.0.0",
-    "assetBundlePatterns": [
-      "**/*"
-    ]
-  },
-  "name": "noovies"
+    "expo": {
+        "name": "noovies",
+        "slug": "noovies",
+        "version": "1.0.0",
+        "assetBundlePatterns": ["**/*"],
+        "splash": {
+            "image": "./assets/movie-64.png"
+        }
+    },
+    "name": "noovies"
 }
