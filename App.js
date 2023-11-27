@@ -4,7 +4,7 @@ import { useAssets } from 'expo-asset';
 import { useFonts } from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback } from 'react';
-import Stack from './navigation/Stack';
+import Root from './navigation/Root';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,7 +24,7 @@ export default function App() {
 
     return (
         <NavigationContainer onReady={onLayoutRootView}>
-            <Stack />
+            <Root />
         </NavigationContainer>
     );
 }
