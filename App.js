@@ -1,4 +1,6 @@
+import { Ionicons } from '@expo/vector-icons';
 import Entypo from '@expo/vector-icons/Entypo';
+import * as Font from 'expo-font';
 import * as SplashScreen from 'expo-splash-screen';
 import { useCallback, useEffect, useState } from 'react';
 import { Text, View } from 'react-native';
@@ -11,7 +13,8 @@ export default function App() {
     useEffect(() => {
         async function prepare() {
             try {
-                await new Promise((resolve) => setTimeout(resolve, 10000));
+                await Font.loadAsync(Ionicons.font);
+                await new Promise((resolve) => setTimeout(resolve, 3000));
             } catch (error) {
                 console.warn(error);
             } finally {
