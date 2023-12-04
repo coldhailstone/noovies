@@ -17,19 +17,19 @@ const Title = styled.Text<{ isDark: boolean }>`
 const Wrapper = styled.View`
     flex-direction: row;
     height: 100%;
-    justify-content: center;
+    width: 90%;
+    margin: 0 auto;
+    justify-content: space-around;
     align-items: center;
 `;
 const Column = styled.View`
-    width: 40%;
-    margin-left: 15px;
+    width: 60%;
 `;
 const OverView = styled.Text<{ isDark: boolean }>`
     margin-top: 10px;
     color: ${(props) => (props.isDark ? 'rgba(255, 255, 255, 0.8)' : 'rgba(0, 0, 0, 0.8)')};
 `;
 const Votes = styled(OverView)`
-    margin-top: 5px;
     font-size: 12px;
 `;
 
@@ -41,30 +41,36 @@ interface SlideProps {
     overview: string;
 }
 
-const Slide: React.FC<SlideProps> = (
+const Slide: React.FC<SlideProps> = ({
     backdropPath,
     posterPath,
     originalTitle,
     voteAverage,
-    overview
-) => {
+    overview,
+}) => {
     const isDark = useColorScheme() === 'dark';
 
-    <View>
-        <BgImg style={StyleSheet.absoluteFill} source={{ uri: makeImgPath(backdropPath) }} />
-        <BlurView tint={isDark ? 'dark' : 'light'} intensity={30} style={StyleSheet.absoluteFill}>
-            <Wrapper>
-                <Column>
+    return (
+        <View>
+            <BgImg style={StyleSheet.absoluteFill} source={{ uri: makeImgPath(backdropPath) }} />
+            <BlurView
+                tint={isDark ? 'dark' : 'light'}
+                intensity={30}
+                style={StyleSheet.absoluteFill}
+            >
+                <Wrapper>
                     <Poster path={posterPath} />
-                    <Title isDark={isDark}>{originalTitle}</Title>
-                    {voteAverage > 0 ? (
-                        <Votes isDark={isDark}>{voteAverage.toFixed(1)}/10</Votes>
-                    ) : null}
-                    <OverView isDark={isDark}>{overview.slice(0, 90)}...</OverView>
-                </Column>
-            </Wrapper>
-        </BlurView>
-    </View>;
+                    <Column>
+                        <Title isDark={isDark}>{originalTitle}</Title>
+                        {voteAverage > 0 ? (
+                            <Votes isDark={isDark}>⭐️ {voteAverage.toFixed(1)}/10</Votes>
+                        ) : null}
+                        <OverView isDark={isDark}>{overview.slice(0, 90)}...</OverView>
+                    </Column>
+                </Wrapper>
+            </BlurView>
+        </View>
+    );
 };
 
 export default Slide;
