@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions, RefreshControl } from 'react-native';
 import Swiper from 'react-native-swiper';
 import styled from 'styled-components/native';
 import Poster from '../components/Poster';
@@ -65,6 +65,7 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 const API_KEY = 'f8d2e8ac76a2e902ea6930dadf78bfd8';
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: { navigate } }) => {
+    const [refreshing, setRefreshing] = useState(false);
     const [loading, setLoading] = useState(true);
     const [nowPlayingMovies, setNowPlayingMovies] = useState([]);
     const [upcoming, setUpcoming] = useState([]);
@@ -102,12 +103,20 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
         getData();
     }, []);
 
+    const onRefresh = async () => {
+        setRefreshing(true);
+        await getData();
+        setRefreshing(false);
+    };
+
     return loading ? (
         <Loader>
             <ActivityIndicator />
         </Loader>
     ) : (
-        <Container>
+        <Container
+            refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
+        >
             <Swiper
                 horizontal
                 loop
@@ -157,7 +166,11 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
                         <HColumn>
                             <Title>{movie.original_title}</Title>
                             <Release>
-                                {new Date(movie.release_date).toLocaleDateString('ko')}
+                                {new Date(movie.release_date).toLocaleDateString('ko', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                })}
                             </Release>
                             <OverView>
                                 {movie.overview !== '' && movie.overview.length > 100
