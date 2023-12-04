@@ -2,7 +2,9 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { ActivityIndicator, Dimensions, FlatList } from 'react-native';
 import Swiper from 'react-native-swiper';
+import { useQuery } from 'react-query';
 import styled from 'styled-components/native';
+import { moviesApi } from '../api';
 import HMedia from '../components/HMedia';
 import Slide from '../components/Slide';
 import VMedia from '../components/VMedia';
@@ -39,6 +41,18 @@ const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: { navigate } }) => {
     const [refreshing, setRefreshing] = useState(false);
+    const { isLoading: nowPlayingLoading, data: nowPlayingData } = useQuery(
+        'nowPlaying',
+        moviesApi.nowPlaying
+    );
+    const { isLoading: upcomingLoading, data: upcomingData } = useQuery(
+        'upcoming',
+        moviesApi.upcoming
+    );
+    const { isLoading: trendingLoading, data: trendingData } = useQuery(
+        'trending',
+        moviesApi.trending
+    );
 
     const onRefresh = async () => {};
     const renderVMedia = ({ item }) => (
@@ -57,6 +71,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
         />
     );
     const movieKeyExtractor = (item) => item.id.toString();
+    const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
 
     return loading ? (
         <Loader>
@@ -81,7 +96,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
                             height: SCREEN_HEIGHT / 4,
                         }}
                     >
-                        {nowPlayingMovies.map((movie) => (
+                        {nowPlayingData.results.map((movie) => (
                             <Slide
                                 key={movie.id}
                                 backdropPath={movie.backdrop_path}
@@ -98,7 +113,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
                         showsHorizontalScrollIndicator={false}
                         contentContainerStyle={{ paddingHorizontal: 30 }}
                         ItemSeparatorComponent={VSeparator}
-                        data={trending}
+                        data={trendingData.results}
                         keyExtractor={movieKeyExtractor}
                         renderItem={renderVMedia}
                     />
@@ -106,7 +121,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
                 </>
             }
             ItemSeparatorComponent={HSeparator}
-            data={upcoming}
+            data={upcomingData.results}
             keyExtractor={movieKeyExtractor}
             renderItem={renderHMedia}
         />
