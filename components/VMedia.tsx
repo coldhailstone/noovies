@@ -25,7 +25,13 @@ interface VMediaProps {
 const VMedia: React.FC<VMediaProps> = ({ posterPath, originalTitle, voteAverage }) => {
     const navigation = useNavigation();
     const goToDetail = () => {
-        navigation.navigate('Stack', { screen: 'Detail' });
+        //@ts-ignore
+        navigation.navigate('Stack', {
+            screen: 'Detail',
+            params: {
+                originalTitle,
+            },
+        });
     };
 
     return (

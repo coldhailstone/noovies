@@ -7,7 +7,7 @@ export interface Moive {
     genre_ids: number[];
     id: number;
     original_language: string;
-    original_title: string;
+    title: string;
     overview: string;
     popularity: number;
     poster_path: string | null;
