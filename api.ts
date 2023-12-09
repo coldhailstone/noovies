@@ -112,9 +112,9 @@ export const moviesApi = {
     },
     detail: ({ queryKey }) => {
         const [_, id] = queryKey;
-        return fetch(`${BASE_URL}/movie/${id}?language=ko-KR&api_key=${API_KEY}`).then((res) =>
-            res.json()
-        );
+        return fetch(
+            `${BASE_URL}/movie/${id}?language=ko-KR&api_key=${API_KEY}&append_to_response=videos,images`
+        ).then((res) => res.json());
     },
 };
 
@@ -139,8 +139,8 @@ export const tvApi = {
     },
     detail: ({ queryKey }) => {
         const [_, id] = queryKey;
-        return fetch(`${BASE_URL}/tv/${id}?language=ko-KR&api_key=${API_KEY}`).then((res) =>
-            res.json()
-        );
+        return fetch(
+            `${BASE_URL}/tv/${id}?language=ko-KR&api_key=${API_KEY}&append_to_response=videos,images`
+        ).then((res) => res.json());
     },
 };
