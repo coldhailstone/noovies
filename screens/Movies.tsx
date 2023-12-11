@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useState } from 'react';
 import { Dimensions, FlatList } from 'react-native';
 import Swiper from 'react-native-swiper';
-import { useQuery, useQueryClient } from 'react-query';
+import { useInfiniteQuery, useQuery, useQueryClient } from 'react-query';
 import styled from 'styled-components/native';
 import { MovieResponse, moviesApi } from '../api';
 import HList from '../components/HList';
@@ -34,7 +34,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
         ['movies', 'nowPlaying'],
         moviesApi.nowPlaying
     );
-    const { isLoading: upcomingLoading, data: upcomingData } = useQuery<MovieResponse>(
+    const { isLoading: upcomingLoading, data: upcomingData } = useInfiniteQuery<MovieResponse>(
         ['movies', 'upcoming'],
         moviesApi.upcoming
     );
@@ -44,6 +44,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
     );
 
     const loading = nowPlayingLoading || upcomingLoading || trendingLoading;
+    const loadMore = () => {};
     const onRefresh = async () => {
         setRefreshing(true);
         queryClient.refetchQueries(['movies']);
@@ -54,6 +55,8 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
         <Loader />
     ) : upcomingData ? (
         <FlatList
+            onEndReached={loadMore}
+            onEndReachedThreshold={0.4}
             refreshing={refreshing}
             onRefresh={onRefresh}
             ListHeaderComponent={
@@ -90,7 +93,7 @@ const Movies: React.FC<NativeStackScreenProps<any, 'Movies'>> = ({ navigation: {
                 </>
             }
             ItemSeparatorComponent={HSeparator}
-            data={upcomingData.results}
+            data={upcomingData.pages.map((page) => page.results).flat()}
             keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
                 <HMedia
