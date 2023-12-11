@@ -22,12 +22,14 @@ const HListSeparator = styled.View`
 interface HListProps {
     title: string;
     data: any[];
+    onEndReached?: Function | any;
 }
 
-const HList: React.FC<HListProps> = ({ title, data }) => (
+const HList: React.FC<HListProps> = ({ title, data, onEndReached }) => (
     <ListContainer>
         <ListTitle>{title}</ListTitle>
         <FlatList
+            onEndReached={onEndReached}
             horizontal
             showsHorizontalScrollIndicator={false}
             ItemSeparatorComponent={HListSeparator}
